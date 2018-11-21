@@ -1,0 +1,29 @@
+{
+    "extends": [
+        "airbnb-base",
+        "eslint:recommended"
+    ],
+    "env": {
+        "node": true,
+        "jest": true
+    },
+    "rules": {
+        "no-console": [
+            "warn",
+            {
+                "allow": [
+                    "info",
+                    "warn",
+                    "error"
+                ]
+            }
+        ],
+        "no-use-before-define": 1,
+        "import/no-extraneous-dependencies": [
+            0,
+            {
+                "devDependencies": true
+            }
+        ]
+    }
+}
