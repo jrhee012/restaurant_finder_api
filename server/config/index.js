@@ -13,4 +13,5 @@ module.exports = {
     GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL,
     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
     FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET,
+    TOKEN: process.env.TOKEN,
 };

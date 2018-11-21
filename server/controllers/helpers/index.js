@@ -1,9 +1,14 @@
 const rp = require('request-promise');
-const _ = require('lodash')
+const _ = require('lodash');
+const mongoose = require('mongoose');
 // const utils = require('./utils');
 // const logger = require('../../logger');
 const config = require('../../config');
 // const { SaveRawDataWorker } = require('../../workers');
+
+require('../../models/Data');
+
+const Data = mongoose.model('Data');
 
 class ApiClient {
     constructor(options) {
@@ -72,9 +77,9 @@ class ApiClient {
         return result;
     }
 
-    async saveData(data) {
+    // async saveData(data) {
 
-    }
+    // }
 }
 
 exports.YelpApiClient = class YelpApiClient extends ApiClient {
@@ -98,10 +103,10 @@ exports.YelpApiClient = class YelpApiClient extends ApiClient {
         }
 
         let searchQueries = {
-            term: 'starbucks',
+            term: query.term,
             type: 'restaurants',
             sort_by: 'best_match',
-            location: query, // TODO: LOCATION REQUIRED
+            location: query.location, // TODO: LOCATION REQUIRED
         }
 
         let headers = {
@@ -117,6 +122,56 @@ exports.YelpApiClient = class YelpApiClient extends ApiClient {
         };
 
         return this.makeCall(options);
+    }
+
+    saveYelpData(data) {
+
+        // let yelp = new Data();
+        // yelp.raw_data = data;
+        // yelp.source = 'yelp';
+        // // console.log('11111', yelp);
+        // yelp.save(err => {
+        //     if (err) {
+        //         console.error(err);
+        //         throw new Error(err.message);
+        //     }
+        //     console.log('yelp data saved!');
+        // });
+
+        Data.findOneAndUpdate(
+            {
+                ext_id: data.id,
+            },
+            {
+                ext_id: data.id,
+                raw_data: data,
+            },
+            {
+                upsert: true,
+                setDefaultsOnInsert: true,
+            },
+            function(err, doc) {
+                if (err) {
+                    console.error(err);
+                }
+                console.log('yelp data saved!');
+            }
+        )
+
+        // Data.findOne(
+        //     {
+        //         raw_data: {
+        //             id: data.id,
+        //         },
+        //     },
+        //     function (err, doc) {
+        //         if (err) {
+        //             console.error(err);
+        //         } else {
+        //             console.log('yelp data: ', doc);
+        //         }
+        //     }
+        // )
     }
 }
 

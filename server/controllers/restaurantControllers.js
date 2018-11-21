@@ -7,10 +7,13 @@ exports.getRestaurants = async (req, res) => {
     if (isEmpty(query)
     || query.location === null
     || query.location === undefined
-    || query.location === '') {
+    || query.location === ''
+    || query.term === null
+    || query.term === undefined
+    || query.term === '') {
         return res.status(400).json({
             code: res.statusCode,
-            message: 'query location required',
+            message: 'query location and term required',
             data: {},
         });
     }
@@ -19,7 +22,7 @@ exports.getRestaurants = async (req, res) => {
 
     let result = [];
     try {
-        result = await yelp.searchBusinesses(query.location);
+        result = await yelp.searchBusinesses(query);
     } catch (e) {
         console.log('make yelp api call error!');
         console.error(e);
@@ -31,7 +34,7 @@ exports.getRestaurants = async (req, res) => {
         });
     }
 
-    console.log('result: ', result);
+    // console.log('result: ', result);
 
     let data = result.businesses
 
@@ -43,6 +46,11 @@ exports.getRestaurants = async (req, res) => {
                 query_location: query.location,
             },
         });
+    }
+
+    console.log('data length: ', data.length);
+    for (let i = 0; i < data.length; i++) {
+        yelp.saveYelpData(data[i]);
     }
 
     return res.status(200).json({
