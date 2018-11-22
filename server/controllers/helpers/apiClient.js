@@ -48,17 +48,19 @@ class ApiClient {
             httpOptions = this.httpOptions;
         }
 
-        console.log(`Calling: ${JSON.stringify(httpOptions.uri)} ...`);
-        console.log(`Headers: ${JSON.stringify(httpOptions.headers)}`);
-        console.log(`Body: ${JSON.stringify(httpOptions.body)}`);
-        console.log(`QS: ${JSON.stringify(httpOptions.qs)}`);
+        if (config.NODE_ENV !== 'production') {
+            console.log(`Calling: ${JSON.stringify(httpOptions.uri)} ...`);
+            console.log(`Headers: ${JSON.stringify(httpOptions.headers)}`);
+            console.log(`Body: ${JSON.stringify(httpOptions.body)}`);
+            console.log(`QS: ${JSON.stringify(httpOptions.qs)}`);
+        }
 
         const isJson = httpOptions.json;
         if (isJson === null || isJson === undefined || !isJson) {
             _.assign(httpOptions, { json: true })
         }
 
-        const startTime = new Date();
+        // const startTime = new Date();
 
         let result = {};
         try {
