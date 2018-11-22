@@ -16,6 +16,8 @@ try {
         mongoose.set('debug', true);
         console.log('mongoose `debug` set `true`');
     }
+
+    require('./cronjobs');
 } catch (e) {
     console.log(`cannot connect to mongodb on ${config.MONGODB_URI}!`);
     console.error(e);
