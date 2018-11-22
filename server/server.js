@@ -16,8 +16,6 @@ try {
         mongoose.set('debug', true);
         console.log('mongoose `debug` set `true`');
     }
-
-    require('./cronjobs');
 } catch (e) {
     console.log(`cannot connect to mongodb on ${config.MONGODB_URI}!`);
     console.error(e);
@@ -47,6 +45,13 @@ server.use(morgan('[:date[iso]] :method :url :status :response-time ms :remote-a
 // server.use(passport.session());
 
 server.use(require('./routes'));
+
+// load models
+require('./models/Data');
+require('./models/Restaurants');
+
+// start cron jobs
+require('./cronjobs');
 
 // setTimeout(async () => {
 //     console.log('!!!')
