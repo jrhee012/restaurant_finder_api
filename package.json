@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/app.js",
-    "dev": "nodemon server/app.js"
+    "dev": "nodemon server/app.js",
+    "dev:worker": "node --experimental-worker server/app.js"
   },
   "author": "Jaehyuk Rhee",
   "license": "ISC",

@@ -1,9 +1,17 @@
 const isEmpty = require('lodash/isEmpty');
 const { YelpApiClient } = require('./helpers/apiClient');
+const {
+    asyncGetCache,
+    redis,
+    // cacheExists,
+} = require('../cache');
+const config = require('../config');
+
+const cacheTtl = parseInt(config.CACHE_TTL, 10) * 60;
 
 exports.getRestaurants = async (req, res) => {
     const query = req.query;
-    console.log(query);
+    // console.log(query);
     if (isEmpty(query)
     || query.location === null
     || query.location === undefined
@@ -21,6 +29,25 @@ exports.getRestaurants = async (req, res) => {
     let yelp = new YelpApiClient();
 
     let result = [];
+
+    let cacheKey = JSON.stringify(query);
+    try {
+        let cache = await asyncGetCache(cacheKey);
+        result = JSON.parse(cache);
+        // console.log(typeof data)
+    } catch (e) {
+        console.log(e);
+    }
+
+    if (result != null) {
+        console.log(`> Data fetched from cache. Cache Key: ${cacheKey}`);
+        return res.status(200).json({
+            code: res.statusCode,
+            message: 'ok',
+            data: {},
+        });
+    }
+
     try {
         result = await yelp.searchBusinesses(query);
     } catch (e) {
@@ -32,6 +59,13 @@ exports.getRestaurants = async (req, res) => {
             messagae: 'e.message',
             data: {},
         });
+    }
+
+    try {
+        redis.set(cacheKey, JSON.stringify(result), 'EX', cacheTtl);
+        console.log(`> Data cached for ${cacheTtl / 60} mins`);
+    } catch (e) {
+        console.error(e);
     }
 
     // console.log('result: ', result);
