@@ -4,7 +4,10 @@ const mongoose = require('mongoose');
 // const isEmpty = require('lodash/isEmpty');
 // const find = require('lodash/find');
 
+// const DBInterface = require('../controllers/helpers/data');
+
 const { Schema } = mongoose;
+// const db = new DBInterface();
 
 const DataSchema = new Schema({
     raw_data: Schema.Types.Mixed,
@@ -29,5 +32,20 @@ DataSchema.pre('validate', function () {
 DataSchema.pre('update', function () {
     this.last_updated = new Date().toISOString();
 });
+
+// DataSchema.post('validate', function (doc) {
+//     db.findAndUpdateRestaurant(doc);
+// });
+
+DataSchema.post('save', function (doc) {
+    // console.log('saved')
+    // let db = new DBInterface();
+    // db.findAndUpdateRestaurant(doc);
+});
+
+// DataSchema.post('update', function (doc) {
+//     // let db = new DBInterface();
+//     db.findAndUpdateRestaurant(doc);
+// });
 
 mongoose.model('Data', DataSchema);

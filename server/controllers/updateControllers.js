@@ -1,28 +1,10 @@
-const isEmpty = require('lodash/isEmpty');
 const { YelpApiClient } = require('./helpers/apiClient');
 
-exports.getRestaurants = async (req, res) => {
-    const query = req.query;
-    console.log(query);
-    if (isEmpty(query)
-    || query.location === null
-    || query.location === undefined
-    || query.location === ''
-    || query.term === null
-    || query.term === undefined
-    || query.term === '') {
-        return res.status(400).json({
-            code: res.statusCode,
-            message: 'query location and term required',
-            data: {},
-        });
-    }
-
+exports.post = async (req, res) => {
     let yelp = new YelpApiClient();
-
     let result = [];
     try {
-        result = await yelp.searchBusinesses(query);
+        result = await yelp.searchBusinesses();
     } catch (e) {
         console.log('make yelp api call error!');
         console.error(e);
@@ -34,8 +16,6 @@ exports.getRestaurants = async (req, res) => {
         });
     }
 
-    // console.log('result: ', result);
-
     let data = result.businesses
 
     if (data.length < 1) {
@@ -43,7 +23,7 @@ exports.getRestaurants = async (req, res) => {
             code: 404,
             message: 'not found',
             data: {
-                query_location: query.location,
+                // query_location: query.location,
             },
         });
     }

@@ -5,10 +5,12 @@ const mongoose = require('mongoose');
 // const logger = require('../../logger');
 const config = require('../../config');
 // const { SaveRawDataWorker } = require('../../workers');
+const DBInterface = require('./data');
 
 require('../../models/Data');
 
 const Data = mongoose.model('Data');
+const db = new DBInterface();
 
 class ApiClient {
     constructor(options) {
@@ -107,6 +109,7 @@ exports.YelpApiClient = class YelpApiClient extends ApiClient {
             type: 'restaurants',
             sort_by: 'best_match',
             location: query.location, // TODO: LOCATION REQUIRED
+            limit: 50,
         }
 
         let headers = {
@@ -141,12 +144,15 @@ exports.YelpApiClient = class YelpApiClient extends ApiClient {
         Data.findOneAndUpdate(
             {
                 ext_id: data.id,
+                source: 'yelp',
             },
             {
                 ext_id: data.id,
                 raw_data: data,
+                source: 'yelp',
             },
             {
+                new: true,
                 upsert: true,
                 setDefaultsOnInsert: true,
             },
@@ -154,7 +160,11 @@ exports.YelpApiClient = class YelpApiClient extends ApiClient {
                 if (err) {
                     console.error(err);
                 }
-                console.log('yelp data saved!');
+                console.log('yelp data saved!', doc == null);
+                if (doc !== null) {
+                    db.findAndUpdateRestaurant(doc);
+                }
+                // db.findAndUpdateRestaurant(doc);
             }
         )
 

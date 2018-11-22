@@ -14,4 +14,5 @@ module.exports = {
     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
     FACEBOOK_APP_SECRET: process.env.FACEBOOK_APP_SECRET,
     TOKEN: process.env.TOKEN,
+    REDIS_URL: process.env.REDIS_URL,
 };

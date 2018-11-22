@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const config = require('./config');
+// const { asyncGetCache, redis } = require('./cache');
 
 mongoose.promise = global.Promise;
 
@@ -44,5 +45,11 @@ server.use(morgan('[:date[iso]] :method :url :status :response-time ms :remote-a
 // server.use(passport.session());
 
 server.use(require('./routes'));
+
+// setTimeout(async () => {
+//     console.log('!!!')
+//     let a = await getAsync('test');
+//     console.log(a);
+// }, 5000);
 
 module.exports = server;
