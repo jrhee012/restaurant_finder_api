@@ -75,7 +75,7 @@ exports.getRestaurants = async (req, res) => {
     if (data.length < 1) {
         return res.status(404).json({
             code: 404,
-            message: 'not found',
+            message: 'Not Found',
             data: {
                 query_location: query.location,
             },
