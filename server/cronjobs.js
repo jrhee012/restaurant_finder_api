@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const Data = mongoose.model('Data');
 
-// console.log('Before job instantiation');
+console.log('Before job instantiation');
 const job1 = new CronJob('* 10 * * * *', async function () {
     // const d = new Date();
     // console.log('At Ten Minutes:', d);
@@ -20,5 +20,5 @@ const job1 = new CronJob('* 10 * * * *', async function () {
         console.error(e);
     }
 });
-// console.log('After job instantiation');
+console.log('After job instantiation');
 job1.start();
